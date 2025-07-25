@@ -1,6 +1,7 @@
 #include "BitcoinExchange.hpp"
 #include <fstream>
 #include <string>
+#include <ctime>
 
 BitcoinExchange::BitcoinExchange(): _fileName("input.txt") {}
 BitcoinExchange::BitcoinExchange( std::string input ): _fileName(input) {}
@@ -24,6 +25,21 @@ std::string BitcoinExchange::getFileName()
 const char *BitcoinExchange::ExceptionFileNotOpened::what() const throw()
 {
 	return ("Couldn't open the file");
+}
+
+const char *BitcoinExchange::ExceptionIncorectDate::what() const throw()
+{
+	return ("Invalid Date received");
+}
+
+const char *BitcoinExchange::ExceptionNoPipeDetected::what() const throw()
+{
+	return ("No pipe was detected");
+}
+
+const char *BitcoinExchange::ExceptionInvalidNumberOfBitCoin::what() const throw()
+{
+	return ("The number of BitCoin is incorrect ");
 }
 
 std::fstream BitcoinExchange::openFile( std::string &fileName)
@@ -73,7 +89,69 @@ void BitcoinExchange::removeSpace(std::string &file)
 	}
 }
 
-lineExploit BitcoinExchange::lineExploit()
+void BitcoinExchange::lineExploit(std::string &date, bool pipe, std::string &number)
+{
+	std::string year;
+	std::string month;
+	std::string day;
+	int yearN;
+	int monthN;
+	int dayN;
+	int i = 0;
+
+	for (; date[i] && date[i] != '-'; i++)
+		year+= date[i];
+	if (date[i] == '-')
+		i++;
+	else
+		throw ExceptionIncorectDate();	
+
+	for (; date[i] && date[i] != '-'; i++)
+		month += date[i];
+	if (date[i] == '-')
+		i++;
+	else
+		throw ExceptionIncorectDate();	
+
+	for (; date[i] && date[i] != '-'; i++)
+		day += date[i];
+	if (date[i])
+		throw ExceptionIncorectDate();	
+
+	yearN = std::atoi(year.c_str());
+	dayN = std::atoi(day.c_str());
+	monthN = std::atoi(day.c_str());
+	std::time_t t = std::time(nullptr);
+    std::tm* now = std::localtime(&t);
+    int annee = now->tm_year + 1900;
+	int months[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+
+	if (yearN > annee || yearN < 2008)
+		throw  ExceptionIncorectDate();
+
+	if (monthN > 12 || monthN <= 0)
+		throw  ExceptionIncorectDate();
+
+	if (dayN > months[monthN] || dayN < 0)
+		throw  ExceptionIncorectDate();
+
+	if (monthN == 2 && !(yearN % 4 == 0 && yearN % 100 != 0) || (yearN % 400 == 0))
+		if (dayN == 29)
+			throw  ExceptionIncorectDate();
+
+	if (!pipe)
+		throw ExceptionNoPipeDetected();
+
+	if (number.find(".") == std::string::npos)
+	{
+		if (number.length() > 4)
+			ExceptionInvalidNumberOfBitCoin();
+		if (number.find("-") == std::string::npos)
+			ExceptionInvalidNumberOfBitCoin();
+
+	}
+}
 
 void BitcoinExchange::exploit( std::string &file )
 {

@@ -30,7 +30,7 @@ class BitcoinExchange
 		void readFile();
 		void exploit( std::string & );
 		void removeSpace( std::string & );
-		void lineExploit( std::string &, bool &, std::string &);
+		void lineExploit( std::string &, bool, std::string &);
 
 		class ExceptionFileNotOpened : public std::exception
 		{
@@ -38,6 +38,23 @@ class BitcoinExchange
 				const char *what() const throw();
 		};
 
+		class ExceptionNoPipeDetected : public std::exception
+		{
+			public :
+				const char *what() const throw();
+		};
+
+		class ExceptionIncorectDate: public std::exception
+		{
+			public :
+				const char *what() const throw();
+		};
+
+		class ExceptionInvalidNumberOfBitCoin: public std::exception
+		{
+			public :
+				const char *what() const throw();
+		};
 
 	private :
 		bool checkDate( std::string & );
