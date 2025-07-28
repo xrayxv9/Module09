@@ -2,7 +2,9 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 #include <map>
+#include <ctime>
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -18,48 +20,22 @@ class BitcoinExchange
 {
 	public :
 		BitcoinExchange();
-		BitcoinExchange( std::string );
-		BitcoinExchange( BitcoinExchange & );
+		BitcoinExchange( const std::string & );
+		BitcoinExchange( const BitcoinExchange & );
 
-		BitcoinExchange &operator=( BitcoinExchange & );
+		BitcoinExchange &operator=( const BitcoinExchange & );
 
 		~BitcoinExchange();
 
-		std::string getFileName();
+		void showData();
+		std::string getFileName() const;
+		bool checkDate( const std::string & );
 
-		void readFile();
-		void exploit( std::string & );
-		void removeSpace( std::string & );
-		void lineExploit( std::string &, bool, std::string &);
-
-		class ExceptionFileNotOpened : public std::exception
-		{
-			public :
-				const char *what() const throw();
-		};
-
-		class ExceptionNoPipeDetected : public std::exception
-		{
-			public :
-				const char *what() const throw();
-		};
-
-		class ExceptionIncorectDate: public std::exception
-		{
-			public :
-				const char *what() const throw();
-		};
-
-		class ExceptionInvalidNumberOfBitCoin: public std::exception
-		{
-			public :
-				const char *what() const throw();
-		};
 
 	private :
-		bool checkDate( std::string & );
-		std::fstream openFile( std::string & );
+		void getData();
+		void removeSpace( std::string & );
 		std::string _fileName;
-		std::map<std::string, unsigned int> _exchangeRate;
-		std::map<std::string, unsigned int> _inputs;
+		std::map<std::string, double> _exchangeRate;
+		bool _canBeUsed;
 };
