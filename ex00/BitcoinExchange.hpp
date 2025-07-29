@@ -28,11 +28,12 @@ class BitcoinExchange
 		~BitcoinExchange();
 
 		void showData();
+		void exploitFile();
 		std::string getFileName() const;
-		bool checkDate( const std::string & );
 
 
 	private :
+		bool checkDate( std::string & );
 		void getData();
 		void removeSpace( std::string & );
 		std::string _fileName;

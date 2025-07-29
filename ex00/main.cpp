@@ -9,5 +9,5 @@ int main( int argc, char **argv )
 	}
 	std::string fileName(argv[1]);
 	BitcoinExchange bc = BitcoinExchange(fileName);
-	bc.showData();
+	bc.exploitFile();
 }
