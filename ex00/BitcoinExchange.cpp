@@ -160,9 +160,10 @@ void BitcoinExchange::exploitFile()
 		if (endptr == number.c_str() || num < 0 || num > 1000)
 		{
 			std::cerr << RED << "Invalid bitcoin amount" << RESET << std::endl;
-			return ;
+			continue ;
 		}
-		std::cout << BLUE << "date : " << date << " amount : " << num  << RESET << std::endl;
+		std::map<std::string, double>::iterator it = _exchangeRate.lower_bound(date);
+		std::cout << date << " => " << num << " = " << num * it->second << std::endl;
 	}
 }
 
