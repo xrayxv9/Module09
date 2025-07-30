@@ -19,14 +19,6 @@ void BitcoinExchange::removeSpace(std::string &file)
 	file.erase(std::remove(file.begin(), file.end(), ' '), file.end());
 }
 
-void BitcoinExchange::showData()
-{
-	for (std::map<std::string, double>::iterator it = _exchangeRate.begin(); it != _exchangeRate.end(); it++)
-	{
-		std::cout << "key : " << it->first << " value : " << it->second << std::endl;
-	}
-}
-
 bool BitcoinExchange::checkDate( std::string &date )
 {
 	size_t pos = 0;
@@ -60,7 +52,7 @@ bool BitcoinExchange::checkDate( std::string &date )
 	tmp = date.substr(pos2 + 1, pos);
 	int day = std::atoi(tmp.c_str());
 	int monthsDate[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	if (!(tmp.length() == 2 && day <= monthsDate[month]))
+	if (!(tmp.length() == 2 && day <= monthsDate[month] && day > 0))
 	{
 		if (month == 2 && bis && day == 29)
 			return true;
@@ -129,6 +121,11 @@ void BitcoinExchange::exploitFile()
 	double num;
 	size_t pos;
 
+	if (!_canBeUsed)
+	{
+		std::cerr << RED << "The data file was determined has invalid, therefore you cannot open it" << RESET << std::endl;
+		return ;
+	}
 	file.open(_fileName.c_str());
 	if (!file.is_open())
 	{
@@ -141,7 +138,7 @@ void BitcoinExchange::exploitFile()
 		pos = line.find('|');
 		if (pos == std::string::npos)
 		{
-			std::cerr << RED << "bad input, missing the pipe" << RESET << std::endl;
+			std::cerr << RED << "bad input, missing the pipe => " << line << RESET << std::endl;
 			continue ;
 		}
 		date = line.substr(0, pos);
@@ -152,17 +149,19 @@ void BitcoinExchange::exploitFile()
 		number = line.substr(pos + 1, line.length());
 		if (number == "")
 		{
-			std::cerr << RED << "No bitcoin amount found" << RESET << std::endl;
+			std::cerr << RED << "No bitcoin amount found => " << line << RESET << std::endl;
 			continue ;
 		}
 		char *endptr = NULL;
 		num = std::strtod(number.c_str(), &endptr);
 		if (endptr == number.c_str() || num < 0 || num > 1000)
 		{
-			std::cerr << RED << "Invalid bitcoin amount" << RESET << std::endl;
+			std::cerr << RED << "Invalid bitcoin amount => " << number << RESET << std::endl;
 			continue ;
 		}
 		std::map<std::string, double>::iterator it = _exchangeRate.lower_bound(date);
+		if (it == _exchangeRate.end() && _exchangeRate.size() != 0)
+			it--;
 		std::cout << date << " => " << num << " = " << num * it->second << std::endl;
 	}
 }

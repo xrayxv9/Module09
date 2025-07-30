@@ -27,7 +27,6 @@ class BitcoinExchange
 
 		~BitcoinExchange();
 
-		void showData();
 		void exploitFile();
 		std::string getFileName() const;
 
