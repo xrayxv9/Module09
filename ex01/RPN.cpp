@@ -18,7 +18,7 @@ RPN &RPN::operator=( const RPN &other )
 	return *this;
 }
 
-std::stack<int> RPN::getStack() const
+std::stack<double> RPN::getStack() const
 {
 	return _queue;
 }
@@ -76,11 +76,16 @@ const char *RPN::ExceptionTooManyNumbers::what() const throw()
 	return "you have a remaining number in your stack";
 }
 
+const char *RPN::ExceptionDivisionByZero::what() const throw()
+{
+	return "Division by zero not accepted";
+}
+
 void RPN::calcul( std::string symbole )
 {
-	int nu;
-	int num;
-	int result;
+	double nu;
+	double num;
+	double result;
 
 	if (_queue.size() < 2)
 		throw ExceptionNotEnoughNumbers();
@@ -100,6 +105,8 @@ void RPN::calcul( std::string symbole )
 			result = num * nu;
 			break ;
 		case '/':
+			if (nu == 0)
+				throw ExceptionDivisionByZero();
 			result = num / nu;
 	}
 	_queue.push(result);

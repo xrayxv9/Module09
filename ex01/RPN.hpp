@@ -26,7 +26,7 @@ class RPN
 		RPN &operator=( const RPN & );
 		~RPN();
 
-		std::stack<int> getStack() const;
+		std::stack<double> getStack() const;
 		// void makeCalcul();
 		void calcul( std::string );
 		void makeCalcul();
@@ -38,6 +38,13 @@ class RPN
 				const char *what() const throw();
 		};
 
+		class ExceptionDivisionByZero : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+
+
 		class ExceptionTooManyNumbers : public std::exception
 		{
 			public:
@@ -45,6 +52,6 @@ class RPN
 		};
 
 	private:
-		std::stack< int > _queue;
+		std::stack< double > _queue;
 		std::string _calcul;
 };
