@@ -82,6 +82,8 @@ void BitcoinExchange::getData()
 	}
 	while (std::getline(file, line))
 	{
+		if (line.empty())
+			return ;
 		removeSpace(line);
 		pos = line.find(",");
 		if (pos == std::string::npos)
@@ -134,6 +136,8 @@ void BitcoinExchange::exploitFile()
 	}
 	while (getline(file, line))
 	{
+		if (line.empty())
+			return ;
 		removeSpace(line);
 		pos = line.find('|');
 		if (pos == std::string::npos)
