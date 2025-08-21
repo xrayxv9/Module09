@@ -2,13 +2,13 @@
 
 #include <deque>
 #include <iostream>
+#include <cstdlib>
 #include <vector>
 
 class PmergeMe
 {
 	public:
 		PmergeMe();
-		PmergeMe( std::string & );
 		PmergeMe( const PmergeMe &);
 		~PmergeMe();
 		PmergeMe &operator=( const PmergeMe & );
@@ -16,10 +16,15 @@ class PmergeMe
 		std::vector<int> getVector() const;
 		std::deque<int> getQueu() const;
 
-		void preParse();
+		class ExceptionParsingError : public std::exception
+		{
+			const char *what() const throw();
+		};
+
+		void doubles();
+		void preParse( char **av );
 
 	private:
 		std::vector<int> _vec;
 		std::deque<int> _deq;
-		std::string _numbers;
 };

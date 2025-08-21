@@ -1,8 +1,6 @@
 #include "PmergeMe.hpp"
-#include <vector>
 
-PmergeMe::PmergeMe(): _numbers("") {}
-PmergeMe::PmergeMe( std::string &num): _numbers(num) {}
+PmergeMe::PmergeMe() {}
 PmergeMe::PmergeMe( const PmergeMe &cpy )
 {
 	*this = cpy;
@@ -26,4 +24,51 @@ std::vector<int> PmergeMe::getVector() const
 std::deque<int> PmergeMe::getQueu() const
 {
 	return _deq;
+}
+
+PmergeMe::~PmergeMe() {}
+
+const char *PmergeMe::ExceptionParsingError::what() const throw()
+{
+	return "Error while parsing the numbers given";
+}
+
+void PmergeMe::preParse( char **av )
+{
+	int i = 1;
+	int j;
+
+	while(av[i])
+	{
+		j = 0;
+		while (av[i][j])
+		{
+			if (av[i][j] < '0' || av[i][j] > '9')
+				throw ExceptionParsingError();
+			j++;
+		}
+		i++;
+	}
+	i = 1;
+	while (av[i])
+	{
+		_vec.push_back(std::atoi(av[i]));
+		i++;
+	}
+	doubles();
+}
+
+
+void PmergeMe::doubles()
+{
+	int size = _vec.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = i + 1; j < size; j++)
+		{
+			if (_vec[i] == _vec[j])
+				throw ExceptionParsingError();
+		}
+	}
 }
