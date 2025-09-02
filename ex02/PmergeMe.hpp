@@ -35,6 +35,7 @@ class PmergeMe
 		std::vector<int> sortVec( std::vector<int> );
 		std::deque<int> sortDec( std::deque<int> );
 		void sort( char ** );
+		void printDec( std::deque<int>, bool first );
 
 	private:
 		std::vector<int> _vec;

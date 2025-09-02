@@ -137,7 +137,10 @@ void BitcoinExchange::exploitFile()
 	while (getline(file, line))
 	{
 		if (line.empty())
-			return ;
+		{
+			std::cerr << RED << "bad input, missing the pipe => " << line << RESET << std::endl;
+			continue ;			
+		}
 		removeSpace(line);
 		pos = line.find('|');
 		if (pos == std::string::npos)
@@ -158,7 +161,7 @@ void BitcoinExchange::exploitFile()
 		}
 		char *endptr = NULL;
 		num = std::strtod(number.c_str(), &endptr);
-		if (endptr == number.c_str() || num < 0 || num > 1000)
+		if (*endptr != '\0' || num < 0 || num > 1000)
 		{
 			std::cerr << RED << "Invalid bitcoin amount => " << number << RESET << std::endl;
 			continue ;

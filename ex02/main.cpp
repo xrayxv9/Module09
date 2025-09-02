@@ -11,11 +11,10 @@ int main(int argc, char **argv)
 	}
 	try
 	{
-		pm.preParse(argv);
+		pm.sort(argv);
 	}
 	catch( std::exception &e )
 	{
 		std::cerr << RED << e.what() << RESET << std::endl;
 	}
-	pm.sort(argv);
 }
